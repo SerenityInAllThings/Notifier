@@ -8,8 +8,8 @@ import { Db } from './db'
 
 export class DynamoDbPersistence implements Db {
   private readonly client: DynamoDBClient
-  private readonly notificationToBeSentTableName = 'notificationToBeSent'
-  private readonly sentNotificationTableName = 'sentNotifications'
+  private readonly notificationToBeSentTableName = 'notifications-to-be-sent'
+  private readonly sentNotificationTableName = 'sent-notifications'
   private readonly destinationTableName = 'destinations'
 
   constructor() {
