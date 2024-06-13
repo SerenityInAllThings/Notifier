@@ -17,3 +17,9 @@ router.get('/', async (_req, res) => {
   const destinations = await getPersistence().getAllDestinations()
   res.status(200).json(destinations)
 })
+
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id
+  await getPersistence().deleteDestination(id)
+  res.status(204).send()
+})

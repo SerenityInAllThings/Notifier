@@ -1,9 +1,11 @@
-import express from 'express'
+import express, { json } from 'express'
 import { router as destinationRouter } from './routers/destinationRouter'
 import { getWebserverPort } from './config/environmentVariables'
 
 const app = express()
-app.use(destinationRouter)
+app.use(json())
+
+app.use('/destination', destinationRouter)
 
 app.get('/healthcheck', (_req, res) => {
   res.send('vivão e consciente')

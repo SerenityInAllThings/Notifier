@@ -9,4 +9,5 @@ export type Db = {
 
   createDestination: (destination: DestinationCreationRequest) => Promise<Destination>
   getAllDestinations: () => Promise<Destination[]>
+  deleteDestination: (destinationId: string) => Promise<void>
 }

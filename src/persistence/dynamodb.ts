@@ -114,6 +114,15 @@ export class DynamoDbPersistence implements Db {
     const destinations = response.Items?.map(item => unmarshall(item) as Destination) ?? []
     return destinations
   }
+
+  async deleteDestination(destinationId: string): Promise<void> {
+    const command = new DeleteItemCommand({
+      TableName: this.destinationTableName,
+      Key: { id: { S: destinationId } },
+    })
+    await this.client.send(command)
+    console.debug(`Deleted destination ${destinationId}`)
+  }
 }
 
 type SentNotification = Notification & {
