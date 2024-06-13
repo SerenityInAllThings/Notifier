@@ -13,3 +13,9 @@ export const getWebserverPort = () => {
   }
   return parsedPort
 }
+
+export const getDynamoDbRegion = () => {
+  const region = process.env['DYNAMODB_REGION']
+  if (!region) throw new Error(`DYNAMODB_REGION environment variable is not set`)
+  return region
+}

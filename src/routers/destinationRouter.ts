@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { isDestinationCreationRequest } from '../domain/destination'
+import { getPersistence } from '../locator'
 
 export const router = Router()
 
@@ -8,7 +9,11 @@ router.post('/', async (req, res) => {
     res.status(400).send('Invalid payload')
     return
   }
-  // TODO: validate payload
-  // TODO: persist destination
-  res.status(201).json({ 'um dia': 'eu existirei' })
+  const destination = await getPersistence().createDestination(req.body)
+  res.status(201).json(destination)
+})
+
+router.get('/', async (_req, res) => {
+  const destinations = await getPersistence().getAllDestinations()
+  res.status(200).json(destinations)
 })
