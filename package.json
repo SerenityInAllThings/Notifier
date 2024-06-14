@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.596.0",
+    "@aws-sdk/client-sqs": "^3.596.0",
     "@aws-sdk/util-dynamodb": "^3.596.0",
     "express": "^4.19.2"
   }

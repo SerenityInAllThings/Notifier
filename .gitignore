@@ -3,3 +3,4 @@ dist/
 
 .terraform.lock.hcl
 .terraform/
+planfile

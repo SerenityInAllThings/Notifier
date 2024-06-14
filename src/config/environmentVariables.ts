@@ -19,3 +19,15 @@ export const getDynamoDbRegion = () => {
   if (!region) throw new Error(`DYNAMODB_REGION environment variable is not set`)
   return region
 }
+
+export const getSqsRegion = () => {
+  const region = process.env['SQS_REGION']
+  if (!region) throw new Error(`SQS_REGION environment variable is not set`)
+  return region
+}
+
+export const getNewNotificationsQueueUrl = () => {
+  const queueUrl = process.env['NEW_NOTIFICATIONS_QUEUE_URL']
+  if (!queueUrl) throw new Error(`NEW_NOTIFICATIONS_QUEUE_URL environment variable is not set`)
+  return queueUrl
+}
