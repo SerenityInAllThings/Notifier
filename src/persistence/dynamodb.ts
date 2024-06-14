@@ -1,6 +1,6 @@
 import { client as dynamoClient } from '../config/dynamodb'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
-import { DestinationCreationRequest, Destination } from '../domain/destination'
+import { DestinationCreationRequest, Destination, SentNotification } from '../domain/destination'
 import { NotificationCreationRequest, Notification, getSentDate } from '../domain/notification'
 import { DeleteItemCommand, DynamoDBClient, PutItemCommand, QueryCommand, ScanCommand } from '@aws-sdk/client-dynamodb'
 import { randomUUID } from 'crypto'
@@ -43,16 +43,19 @@ export class DynamoDbPersistence implements Db {
     return notifications
   }
 
-  async markNotificationsAsSent(notifications: Notification[]): Promise<void> {
-    const results = await Promise.all(notifications.map(this.markNotificationAsSent))
-    console.log('markNotificationsAsSent results', results)
-  }
-
-  private async markNotificationAsSent(notification: Notification): Promise<SentNotification> {
+  async markNotificationAsSent(notification: Notification, destination: Destination[]): Promise<SentNotification[]> {
     await this.deleteFromNotificationToBeSentTable(notification)
-    const sentNotification: SentNotification = { ...notification, sentDate: getSentDate() }
-    await this.insertIntoSentNotificationsTable(sentNotification)
-    return sentNotification
+    const insertionsRequests = destination.map(destination => {
+      const sentNotification: SentNotification = {
+        ...notification,
+        sentDate: getSentDate(),
+        destinationName: destination.name,
+        destinationType: destination.type,
+      }
+      return this.insertIntoSentNotificationsTable(sentNotification)
+    })
+    const sentNotifications = await Promise.all(insertionsRequests)
+    return sentNotifications
   }
 
   private async deleteFromNotificationToBeSentTable(notification: Notification): Promise<void> {
@@ -65,13 +68,14 @@ export class DynamoDbPersistence implements Db {
     console.debug(`Deleted notification ${id}`)
   }
 
-  private async insertIntoSentNotificationsTable(notification: SentNotification): Promise<void> {
+  private async insertIntoSentNotificationsTable(notification: SentNotification): Promise<SentNotification> {
     const command = new PutItemCommand({
       TableName: this.sentNotificationTableName,
       Item: marshall(notification),
     })
     await this.client.send(command)
     console.debug(`Inserted notification ${notification.id} as sent`)
+    return notification
   }
 
   async getRecentlySentNotifications(): Promise<Notification[]> {
@@ -123,9 +127,4 @@ export class DynamoDbPersistence implements Db {
     await this.client.send(command)
     console.debug(`Deleted destination ${destinationId}`)
   }
-}
-
-type SentNotification = Notification & {
-  /** YYYY-MM-DD, using notification.ts getSentDate function */
-  sentDate: string
 }

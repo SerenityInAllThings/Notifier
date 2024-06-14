@@ -1,10 +1,10 @@
-import { Destination, DestinationCreationRequest } from '../domain/destination'
+import { Destination, DestinationCreationRequest, SentNotification } from '../domain/destination'
 import { NotificationCreationRequest, Notification } from '../domain/notification'
 
 export type Db = {
   createNotification: (notification: NotificationCreationRequest) => Promise<Notification>
   getNotificationToBeSent: () => Promise<Notification[]>
-  markNotificationsAsSent: (notifications: Notification[]) => Promise<void>
+  markNotificationAsSent: (notification: Notification, destination: Destination[]) => Promise<SentNotification[]>
   getRecentlySentNotifications: () => Promise<Notification[]>
 
   createDestination: (destination: DestinationCreationRequest) => Promise<Destination>
