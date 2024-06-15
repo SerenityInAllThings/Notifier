@@ -23,11 +23,23 @@ export type SentNotification = Notification & {
 
 export type DestinationCreationRequest = Omit<Destination, 'id'>
 
-export const isDestinationCreationRequest = (value: unknown) =>
+export const isDestinationCreationRequest = (value: unknown): value is DestinationCreationRequest =>
   isObject(value) &&
   hasStringProperty(value, 'name') &&
   hasStringLiteralProperty(value, 'type', destinationTypes) &&
   hasStringToStringMapProperty(value, 'requiredTags')
+
+export type DiscordDestinationCreationRequest = Omit<DestinationCreationRequest, 'type'> & {
+  type: 'discord'
+}
+
+export const isDiscordDestinationCreationRequest = (value: unknown): value is DiscordDestinationCreationRequest => {
+  if (!isDestinationCreationRequest(value)) return false
+  if (value.type !== 'discord') return false
+  const requiredTags = ['guild-id', 'channel-id', 'send-discord']
+  const tags = Object.keys(value.requiredTags)
+  return requiredTags.every(requiredTag => tags.includes(requiredTag))
+}
 
 export const shouldSendToDestination = (destination: Destination, notification: Notification) => {
   const requiredTags = destination.requiredTags

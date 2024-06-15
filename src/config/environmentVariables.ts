@@ -31,3 +31,9 @@ export const getNewNotificationsQueueUrl = () => {
   if (!queueUrl) throw new Error(`NEW_NOTIFICATIONS_QUEUE_URL environment variable is not set`)
   return queueUrl
 }
+
+export const getDiscordToken = () => {
+  const token = process.env['DISCORD_TOKEN']
+  if (!token) throw new Error(`DISCORD_TOKEN environment variable is not set`)
+  return token
+}

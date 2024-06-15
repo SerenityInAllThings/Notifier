@@ -31,7 +31,7 @@ const getNotificationsAndDestinations = async () => {
 const sendNotification = async (notification: Notification, destinations: Destination[]) => {
   for (const destination of destinations) {
     const handler = getDestinationHandler(destination.type)
-    await handler.send(notification)
+    await handler.send(notification, destination)
   }
   await getPersistence().markNotificationAsSent(notification, destinations)
 }

@@ -1,11 +1,20 @@
 import { Router } from 'express'
-import { isDestinationCreationRequest } from '../domain/destination'
+import { isDestinationCreationRequest, isDiscordDestinationCreationRequest } from '../domain/destination'
 import { getPersistence } from '../locator'
 
 export const router = Router()
 
 router.post('/', async (req, res) => {
   if (!isDestinationCreationRequest(req.body)) {
+    res.status(400).send('Invalid payload')
+    return
+  }
+  const destination = await getPersistence().createDestination(req.body)
+  res.status(201).json(destination)
+})
+
+router.post('/type/discord', async (req, res) => {
+  if (!isDiscordDestinationCreationRequest(req.body)) {
     res.status(400).send('Invalid payload')
     return
   }
