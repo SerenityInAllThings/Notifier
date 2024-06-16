@@ -1,3 +1,3 @@
 export type Queue = {
-  enqueueSentNotification: () => Promise<void>
+  enqueueNewNotificationEvent: () => Promise<void>
 }

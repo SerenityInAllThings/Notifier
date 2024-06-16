@@ -12,7 +12,7 @@ export class Sqs implements Queue {
     this.newNotificationQueueUrl = getNewNotificationsQueueUrl()
   }
 
-  async enqueueSentNotification(): Promise<void> {
+  async enqueueNewNotificationEvent(): Promise<void> {
     const message: NewMessagesAvailableEvent = { date: new Date() }
     const command = new SendMessageCommand({
       QueueUrl: this.newNotificationQueueUrl,
