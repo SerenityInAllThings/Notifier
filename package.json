@@ -7,8 +7,9 @@
     "test": "jest",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "start": "node --env-file=.env.$ENVIRONMENT --env-file=.env.secrets dist/index.js",
+    "start": "node --env-file=.env.$ENVIRONMENT dist/index.js",
     "start:watch": "node --env-file=.env.$ENVIRONMENT --env-file=.env.secrets --watch dist/index.js",
+    "start:local": "node --env-file=.env.local --env-file=.env.secrets --watch dist/index.js",
     "dev": "export ENVIRONMENT=local && npm-run-all --parallel build:watch start:watch"
   },
   "author": "",
